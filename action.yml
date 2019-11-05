@@ -1,0 +1,13 @@
+name: Inclusive Organization
+description: Invite contributors to your GitHub organization when their first PR gets merged, to make them feel welcome and included.
+author: Kornel Dubieniecki
+branding:
+  icon: award
+  color: green
+inputs:
+  organization:
+    description: Name of the organization to which you would like to invite contributors.
+    required: true
+runs:
+  using: node12
+  main: dist/index.js

@@ -1,0 +1,33 @@
+{
+  "name": "inclusive-organization-action",
+  "version": "1.0.0",
+  "description": "Invite contributors to your GitHub organization when their first PR gets merged, to make them feel welcome and included.",
+  "scripts": {
+    "build": "ncc build index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/lekterable/inclusive-organization-action.git"
+  },
+  "keywords": [
+    "github",
+    "action",
+    "actions",
+    "invite",
+    "organization",
+    "workflow"
+  ],
+  "author": "Kornel Dubieniecki",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/lekterable/inclusive-organization-action/issues"
+  },
+  "homepage": "https://github.com/lekterable/inclusive-organization-action#readme",
+  "dependencies": {
+    "@actions/core": "^1.2.0",
+    "@actions/github": "^1.1.0"
+  },
+  "devDependencies": {
+    "@zeit/ncc": "^0.20.5"
+  }
+}
