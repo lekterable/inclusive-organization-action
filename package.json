@@ -1,6 +1,6 @@
 {
   "name": "inclusive-organization-action",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Invite contributors to your GitHub organization when their first PR gets merged, to make them feel welcome and included.",
   "scripts": {
     "build": "ncc build index.js"

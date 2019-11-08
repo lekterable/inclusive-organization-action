@@ -524,9 +524,13 @@ module.exports = require("os");
 const core = __webpack_require__(470)
 const github = __webpack_require__(469)
 
+const transformTeamName = teamName => teamName.toLowerCase().replace(' ', '-')
+
 const run = async () => {
   try {
     const organization = core.getInput('organization', { required: true })
+    const teamName = core.getInput('team')
+    const comment = core.getInput('comment')
     const { ACCESS_TOKEN } = process.env
 
     if (!ACCESS_TOKEN)
@@ -545,27 +549,68 @@ const run = async () => {
     const isMergeCommit = commit.data.parents.length > 1
     if (!isMergeCommit) return
 
-    const { data } = await octokit.repos.listPullRequestsAssociatedWithCommit({
+    const {
+      data: [pullRequest],
+    } = await octokit.repos.listPullRequestsAssociatedWithCommit({
       owner: repository.owner.login,
       repo: repository.name,
       commit_sha: sha,
     })
 
-    const contributor = data[0].user
+    const contributor = pullRequest.user
 
-    try {
-      await octokit.orgs.checkMembership({
+    if (teamName) {
+      const team = await octokit.teams.getByName({
         org: organization,
-        username: contributor.login,
+        team_slug: transformTeamName(teamName),
       })
-    } catch (_) {
+
       try {
-        await octokit.orgs.createInvitation({
-          org: organization,
-          invitee_id: contributor.id,
+        await octokit.teams.getMembership({
+          team_id: team.data.id,
+          username: contributor.login,
         })
-      } catch (error) {
-        core.setFailed(error.message)
+      } catch (_) {
+        try {
+          await octokit.teams.addOrUpdateMembership({
+            team_id: team.data.id,
+            username: contributor.login,
+          })
+
+          if (comment)
+            await octokit.issues.createComment({
+              owner: repository.owner.login,
+              repo: repository.name,
+              issue_number: pullRequest.number,
+              body: comment,
+            })
+        } catch (error) {
+          core.setFailed(error.message)
+        }
+      }
+    } else {
+      try {
+        await octokit.orgs.checkMembership({
+          org: organization,
+          username: contributor.login,
+        })
+      } catch (_) {
+        try {
+          await octokit.orgs.createInvitation({
+            org: organization,
+            invitee_id: contributor.id,
+          })
+
+          if (comment)
+            await octokit.issues.createComment({
+              owner: repository.owner.login,
+              repo: repository.name,
+              issue_number: pullRequest.number,
+              body: comment,
+            })
+        } catch (error) {
+          core.setFailed(error.message)
+        }
       }
     }
   } catch (error) {

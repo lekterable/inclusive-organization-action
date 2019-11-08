@@ -8,6 +8,12 @@ inputs:
   organization:
     description: Name of the organization to which you would like to invite contributors.
     required: true
+  team:
+    description: Name of the team within organization to which you would like to add contributors.
+    required: false
+  comment:
+    description: A comment which will be posted on the contributors PR.
+    required: false
 runs:
   using: node12
   main: dist/index.js
