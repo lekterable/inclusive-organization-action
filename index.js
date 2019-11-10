@@ -20,18 +20,18 @@ const run = async () => {
     const commit = await octokit.git.getCommit({
       owner: repository.owner.login,
       repo: repository.name,
-      commit_sha: sha,
+      commit_sha: sha
     })
 
     const isMergeCommit = commit.data.parents.length > 1
     if (!isMergeCommit) return
 
     const {
-      data: [pullRequest],
+      data: [pullRequest]
     } = await octokit.repos.listPullRequestsAssociatedWithCommit({
       owner: repository.owner.login,
       repo: repository.name,
-      commit_sha: sha,
+      commit_sha: sha
     })
 
     const contributor = pullRequest.user
@@ -39,19 +39,19 @@ const run = async () => {
     if (teamName) {
       const team = await octokit.teams.getByName({
         org: organization,
-        team_slug: transformTeamName(teamName),
+        team_slug: transformTeamName(teamName)
       })
 
       try {
         await octokit.teams.getMembership({
           team_id: team.data.id,
-          username: contributor.login,
+          username: contributor.login
         })
       } catch (_) {
         try {
           await octokit.teams.addOrUpdateMembership({
             team_id: team.data.id,
-            username: contributor.login,
+            username: contributor.login
           })
 
           if (comment)
@@ -59,7 +59,7 @@ const run = async () => {
               owner: repository.owner.login,
               repo: repository.name,
               issue_number: pullRequest.number,
-              body: comment,
+              body: comment
             })
         } catch (error) {
           core.setFailed(error.message)
@@ -69,13 +69,13 @@ const run = async () => {
       try {
         await octokit.orgs.checkMembership({
           org: organization,
-          username: contributor.login,
+          username: contributor.login
         })
       } catch (_) {
         try {
           await octokit.orgs.createInvitation({
             org: organization,
-            invitee_id: contributor.id,
+            invitee_id: contributor.id
           })
 
           if (comment)
@@ -83,7 +83,7 @@ const run = async () => {
               owner: repository.owner.login,
               repo: repository.name,
               issue_number: pullRequest.number,
-              body: comment,
+              body: comment
             })
         } catch (error) {
           core.setFailed(error.message)
