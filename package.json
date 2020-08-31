@@ -24,7 +24,7 @@
   },
   "homepage": "https://github.com/lekterable/inclusive-organization-action#readme",
   "dependencies": {
-    "@actions/core": "^1.2.4",
+    "@actions/core": "^1.2.5",
     "@actions/github": "^3.0.0"
   },
   "devDependencies": {
