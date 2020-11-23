@@ -30,7 +30,7 @@
   "devDependencies": {
     "@zeit/ncc": "^0.22.3",
     "husky": "^4.2.5",
-    "prettier": "^2.0.5",
+    "prettier": "^2.2.0",
     "pretty-quick": "^2.0.1"
   }
 }
